@@ -1,0 +1,33 @@
+name: cleanup
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/cleanup.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Restore source
+        run: python scripts/restore_source.py
+      - name: Remove build/setup artifacts
+        run: |
+          rm -rf source_parts
+          rm -rf scripts
+          rm -f PYPI_TRUSTED_PUBLISHING.txt
+      - name: Commit cleaned repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Clean repository"
+          git push

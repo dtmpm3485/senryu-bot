@@ -3,7 +3,7 @@
 from ._native import run as _run
 
 __all__ = ["run"]
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 def run(token: str) -> None:

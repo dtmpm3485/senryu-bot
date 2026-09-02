@@ -23,5 +23,8 @@ jobs:
         run: cargo check --all-targets
       - name: Rust tests
         run: cargo test --lib
-      - name: Build wheel
-        run: maturin build --release --out dist --manylinux auto
+      - name: Build portable Linux wheel
+        uses: PyO3/maturin-action@v1
+        with:
+          manylinux: "2_28"
+          args: --release --out dist --compatibility pypi

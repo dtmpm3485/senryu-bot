@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "senryu-bot"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Rust-powered Discord senryu detector bot, launched from Python with one function call."
 readme = "README.md"
 requires-python = ">=3.10"

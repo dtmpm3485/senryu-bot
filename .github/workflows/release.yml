@@ -59,9 +59,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target:
-          - aarch64-linux-android
-          - x86_64-linux-android
+        include:
+          - target: aarch64-linux-android
+            android_tag: android_24_arm64_v8a
+            pydroid_tag: linux_aarch64
+          - target: x86_64-linux-android
+            android_tag: android_24_x86_64
+            pydroid_tag: linux_x86_64
     env:
       ANDROID_API_LEVEL: "24"
       ANDROID_PYTHON_VERSION: "3.13.15"
@@ -73,6 +77,59 @@ jobs:
           target: ${{ matrix.target }}
           manylinux: "off"
           args: --release --out dist --compatibility pypi
+      - name: Add Pydroid-compatible wheel tag
+        shell: bash
+        env:
+          ANDROID_TAG: ${{ matrix.android_tag }}
+          PYDROID_TAG: ${{ matrix.pydroid_tag }}
+        run: |
+          python - <<'PY'
+          import base64
+          import csv
+          import hashlib
+          import io
+          import os
+          import pathlib
+          import zipfile
+
+          dist = pathlib.Path("dist")
+          android_tag = os.environ["ANDROID_TAG"]
+          pydroid_tag = os.environ["PYDROID_TAG"]
+
+          src = next(dist.glob(f"*-{android_tag}.whl"))
+          dst = src.with_name(src.name.replace(android_tag, pydroid_tag))
+
+          with zipfile.ZipFile(src, "r") as zin:
+              files = {name: zin.read(name) for name in zin.namelist()}
+
+          wheel_path = next(name for name in files if name.endswith(".dist-info/WHEEL"))
+          record_path = next(name for name in files if name.endswith(".dist-info/RECORD"))
+
+          wheel_text = files[wheel_path].decode("utf-8")
+          old_tag = f"cp310-abi3-{android_tag}"
+          new_tag = f"cp310-abi3-{pydroid_tag}"
+          if old_tag not in wheel_text:
+              raise SystemExit(f"wheel tag not found: {old_tag}")
+          files[wheel_path] = wheel_text.replace(old_tag, new_tag).encode("utf-8")
+
+          rows = []
+          for name, data in files.items():
+              if name == record_path:
+                  continue
+              digest = base64.urlsafe_b64encode(hashlib.sha256(data).digest()).rstrip(b"=").decode("ascii")
+              rows.append([name, f"sha256={digest}", str(len(data))])
+          rows.append([record_path, "", ""])
+
+          buf = io.StringIO(newline="")
+          csv.writer(buf, lineterminator="\n").writerows(rows)
+          files[record_path] = buf.getvalue().encode("utf-8")
+
+          with zipfile.ZipFile(dst, "w", compression=zipfile.ZIP_DEFLATED) as zout:
+              for name, data in files.items():
+                  zout.writestr(name, data)
+
+          print(dst)
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: wheels-android-${{ matrix.target }}

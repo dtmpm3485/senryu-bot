@@ -1,9 +1,0 @@
-/target
-/dist
-/.venv
-__pycache__/
-*.pyc
-data/
-senryu_bot.toml
-config.toml
-.env

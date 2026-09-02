@@ -21,8 +21,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Restore complete source
-        run: python scripts/restore_source.py
       - uses: dtolnay/rust-toolchain@stable
       - name: Install maturin
         if: runner.os != 'Linux'
@@ -53,8 +51,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Restore complete source
-        run: python scripts/restore_source.py
       - uses: dtolnay/rust-toolchain@stable
       - name: Install maturin
         run: python -m pip install --upgrade pip maturin

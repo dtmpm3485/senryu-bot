@@ -71,17 +71,10 @@ commands_file.write_text(commands_text, encoding="utf-8")
 print("Applied CI compatibility fixes.")
 
 
-# Keep package description intentionally minimal.
+
+
+# Keep the package README in sync with GitHub.
 Path("README.md").write_text(
-    """```bash
-pip install senryu-bot
-```
-
-```python
-from senryu_bot import run
-
-run("DISCORD_BOT_TOKEN")
-```
-""",
+    "# senryu-bot\n\n## インストール\n\n```bash\npip install senryu-bot\n```\n\n## 使い方\n\n```python\nfrom senryu_bot import run\n\nrun(\"DISCORD_BOT_TOKEN\")\n```\n\n## コマンド一覧\n\n- `/mute` - このチャンネルで川柳検出を停止\n- `/unmute` - このチャンネルで川柳検出を再開\n- `/rank` - サーバー内の川柳ランキングを表示\n- `/delete` - 自分の川柳を選んで削除\n- `/detect on` - 自分の川柳検出を有効化\n- `/detect off` - 自分の川柳検出を無効化\n- `/detect status` - 川柳検出の状態を確認\n- `/detect ban` - 管理者がユーザーの検出を無効化\n- `/detect unban` - 管理者がユーザーの検出を再有効化\n- `/detect list` - 検出無効ユーザーの一覧を表示\n- `/channel` - チャンネルタイプごとの検出設定\n- `/doctor` - Botの動作状況を確認\n- `/contact` - Bot管理者へ問い合わせ\n- `/admin stats` - 管理者向け統計\n- `/admin backup` - 管理者向けバックアップ\n- `/admin contact-message` - 問い合わせへの返信\n\nメッセージで `詠め` と送ると保存済みの川柳から一句作り、`詠むな` と送ると直前の川柳を表示します。\n",
     encoding="utf-8",
 )

@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "senryu-bot"
-version = "0.1.1"
+version = "0.1.2"
 description = "A Rust-powered Discord senryu detector bot, launched from Python with one function call."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -26,6 +26,9 @@ python-source = "python"
 module-name = "senryu_bot._native"
 features = ["pyo3/extension-module"]
 strip = true
+
+[tool.cibuildwheel.ios]
+xbuild-tools = ["rustc", "cargo", "rustup", "cc", "ar"]
 
 [project.urls]
 Homepage = "https://github.com/dtmpm3485/senryu-bot"

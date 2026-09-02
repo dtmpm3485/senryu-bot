@@ -38,3 +38,34 @@ for item in src.iterdir():
         shutil.copy2(item, dest)
 
 print("Restored complete senryu-bot source archive.")
+
+
+# Compatibility fixes found by CI against current sqlx/rand releases.
+db_file = Path("src/db.rs")
+db_text = db_file.read_text(encoding="utf-8")
+db_text = db_text.replace(
+    "sqlx::query(sql).execute(pool).await?;",
+    "sqlx::query(*sql).execute(pool).await?;",
+)
+db_text = db_text.replace(
+    """        let mut rng = rand::rng();
+        let mut out = Vec::with_capacity(3);
+        for _ in 0..3 {
+            let offset = rng.random_range(0..count);""",
+    """        let offsets: Vec<i64> = {
+            let mut rng = rand::rng();
+            (0..3).map(|_| rng.random_range(0..count)).collect()
+        };
+        let mut out = Vec::with_capacity(3);
+        for offset in offsets {""",
+)
+db_file.write_text(db_text, encoding="utf-8")
+
+commands_file = Path("src/commands.rs")
+commands_text = commands_file.read_text(encoding="utf-8")
+commands_text = commands_text.replace(
+    "use std::{collections::HashMap, sync::Arc};",
+    "use std::sync::Arc;",
+)
+commands_file.write_text(commands_text, encoding="utf-8")
+print("Applied CI compatibility fixes.")

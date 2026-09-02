@@ -105,7 +105,7 @@ Target configuration:
 - GitHub owner: `dtmpm3485`
 - GitHub repository: `senryu-bot`
 - Workflow: `release.yml`
-- Environment: `pypi`
+- Environment: leave blank
 
 After the Trusted Publisher is registered on PyPI, run the `release` workflow
 manually or push a version tag such as `v0.1.0`. The workflow builds platform

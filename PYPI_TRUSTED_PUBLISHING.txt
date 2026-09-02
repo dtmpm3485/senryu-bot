@@ -4,6 +4,6 @@ PyPI project name: senryu-bot
 Owner: dtmpm3485
 Repository: senryu-bot
 Workflow name: release.yml
-Environment name: pypi
+Environment name: (leave blank)
 
-After the publisher is registered, pushing tag v0.1.0 will build Windows/Linux/macOS wheels plus an sdist and publish them to PyPI via OIDC. No PyPI API token is required.
+After the publisher is registered, the release workflow builds Windows/Linux/macOS wheels plus an sdist and publishes them to PyPI via OIDC. No PyPI API token is required.

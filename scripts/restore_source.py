@@ -69,3 +69,19 @@ commands_text = commands_text.replace(
 )
 commands_file.write_text(commands_text, encoding="utf-8")
 print("Applied CI compatibility fixes.")
+
+
+# Keep package description intentionally minimal.
+Path("README.md").write_text(
+    """```bash
+pip install senryu-bot
+```
+
+```python
+from senryu_bot import run
+
+run("DISCORD_BOT_TOKEN")
+```
+""",
+    encoding="utf-8",
+)

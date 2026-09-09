@@ -6,7 +6,7 @@
 
 Discordの会話から川柳を自動で検出するBotです。Bot本体と判定処理はRustで実装されており、Pythonから起動できます。
 
-![senryu-botの動作例](https://github.com/dtmpm3485/senryu-bot/blob/main/assets/demo.jpg?raw=true)
+![senryu-botの動作例](https://github.com/dtmpm3485/senryu-bot/blob/main/assets/demo.jpg?raw=true&v=2)
 
 ## 機能
 
